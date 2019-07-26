@@ -7,7 +7,20 @@ output:
 
 
 ## Loading and preprocessing the data
-
+#My Working Directory
+setwd("C:/Users/vasur/Desktop/Learning/5")
+# load data with headers
+data_file <- read.csv("activity.csv",header=T)
+#Getting Dimensons of Data
+dim(data_file)
+str(data_file)
+#Reading first 5 rows
+head(data_file)
+#Reading Last 5 rows
+tail(data_file)
+#Checking for missing data
+missing_data <- data_file[is.na(data_file$steps),]
+dim(missing_data)
 
 
 ## What is mean total number of steps taken per day?
