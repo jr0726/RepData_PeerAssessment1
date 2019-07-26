@@ -19,7 +19,7 @@ head(data_file)
 #Reading Last 5 rows
 tail(data_file)
 #Checking for missing data
-missing_data <- data_file[is.na(data_file$steps),]
+missing_data <- data_file[! is.na(data_file$steps),]
 dim(missing_data)
 
 
@@ -36,6 +36,10 @@ summary(totalNumbeOfSteps)
 
 ## What is the average daily activity pattern?
 
+
+meanOfSteps <- with(missing_data, tapply(steps, missing_data$interval, mean))
+interval <- levels(as.factor(dt1$interval))
+plot(interval,meanOfSteps, type = "l", main = "Time series plot of the \n average number of steps taken", xlab = "interval", ylab = "Mean steps")
 
 
 ## Imputing missing values
