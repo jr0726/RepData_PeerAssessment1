@@ -40,7 +40,8 @@ summary(totalNumbeOfSteps)
 meanOfSteps <- with(missing_data, tapply(steps, missing_data$interval, mean))
 interval <- levels(as.factor(dt1$interval))
 plot(interval,meanOfSteps, type = "l", main = "Time series plot of the \n average number of steps taken", xlab = "interval", ylab = "Mean steps")
-
+table <- data.frame(meanOfSteps,interval)
+table[table$meanOfSteps==max(table$meanOfSteps),][2]
 
 ## Imputing missing values
 
