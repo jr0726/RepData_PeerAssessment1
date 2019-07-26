@@ -25,6 +25,13 @@ dim(missing_data)
 
 ## What is mean total number of steps taken per day?
 
+#calculateing total number of steps taken per day
+totalNumbeOfSteps <- with(data_file, tapply(steps, as.factor(data_file$date), mean, nm.rm = TRUE))
+#plot histogram
+hist(totalNumbeOfSteps, main = "Histogram of total number of steps taken per day", xlab = "Total number of steps")
+#mean total number of steps taken per day
+summary(totalNumbeOfSteps)
+
 
 
 ## What is the average daily activity pattern?
