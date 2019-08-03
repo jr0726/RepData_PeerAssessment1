@@ -49,6 +49,7 @@ table[table$meanOfSteps==max(table$meanOfSteps),][2]
 
 
 #total number of missing values in the dataset
+missing_data <- data_file[ is.na(data_file$steps),]
 length(missing_data$steps)
 #replace the missing values by the the average number of steps taken
 meanOfSteps <- with(nonMissingData, tapply(steps, nonMissingData$interval, mean))
