@@ -7,19 +7,85 @@ output:
 
 
 ## Loading and preprocessing the data
-
+#My Working Directory
+setwd("C:/Users/vasur/Desktop/Learning/5_Reproducible")
+# load data with headers
+data_file <- read.csv("activity.csv",header=T)
+#Getting Dimensons of Data
+dim(data_file)
+str(data_file)
+#Reading first 5 rows
+head(data_file)
+#Reading Last 5 rows
+tail(data_file)
+#Checking for missing data
+missing_data <- data_file[is.na(data_file$steps),]
+dim(missing_data)
 
 
 ## What is mean total number of steps taken per day?
+
+#The data without any missing values
+nonMissingData <- data_file[! is.na(data_file$steps),]
+#calculateing total number of steps taken per day
+totalNumbeOfSteps <- with(data_file, tapply(steps, as.factor(data_file$date), sum, na.rm = TRUE))
+#plot histogram
+hist(totalNumbeOfSteps, main = "Histogram of total number of steps taken per day", xlab = "Total number of steps")
+#mean total number of steps taken per day
+summary(totalNumbeOfSteps)
 
 
 
 ## What is the average daily activity pattern?
 
 
+meanOfSteps <- with(nonMissingData, tapply(steps, nonMissingData$interval, mean))
+interval <- levels(as.factor(nonMissingData$interval))
+plot(interval,meanOfSteps, type = "l", main = "Time series plot of the \n average number of steps taken", xlab = "interval", ylab = "Mean steps")
+table <- data.frame(meanOfSteps,interval)
+table[table$meanOfSteps==max(table$meanOfSteps),][2]
 
 ## Imputing missing values
 
 
+#total number of missing values in the dataset
+missing_data <- data_file[ is.na(data_file$steps),]
+length(missing_data$steps)
+#replace the missing values by the the average number of steps taken
+meanOfSteps <- with(nonMissingData, tapply(steps, nonMissingData$interval, mean))
+missing_data$steps <- meanOfSteps
+#new dataset  with the missing data filled in
+missing_data$steps <- meanOfSteps
+newDataSet <- rbind(nonMissingData,missing_data)
+newDataSet <- newDataSet[order(newDataSet$date),]
+#histogram of the total number of steps taken each day
+totalNumbeOfSteps2 <- with(newDataSet, tapply(steps,as.factor(newDataSet$date),sum))
+hist(totalNumbeOfSteps2,main = "Histogram of total number of steps taken per day", xlab = "Total number of steps")
+#mean and median of the total number of steps taken per day
+#mean and median with original data set
+summary(totalNumbeOfSteps)
+#mean and median with new data set
+summary(totalNumbeOfSteps2)
+#mean and median are different with orignal data set and new data set
+
 
 ## Are there differences in activity patterns between weekdays and weekends?
+#Week day
+newDataSet$days <- weekdays(as.Date(newDataSet$date))
+#weekend data
+weekend_feature <- grep("Saturday|Sunday", newDataSet$days, ignore.case = T)
+# subset data of the weekend
+weekend_dt <- newDataSet[weekend_feature,]
+weekend_dt$weekday <- "weekend"
+
+# subset data of the weekday
+weekday_dt <- subset(newDataSet,newDataSet$days !=weekend_feature)
+weekday_dt$weekday <- "weekday"
+
+#new dataset containing days and weekdays
+newDataSet2 <- rbind(weekday_dt,weekend_dt)
+#Time series plot
+library(ggplot2)
+meanNumberOfSteps <- aggregate(steps ~ interval+weekday, newDataSet2,mean)
+myplot <- qplot(interval, steps, data = meanNumberOfSteps, facets = weekday~.) + geom_line(size = 1) + ylab("Mean steps") + ggtitle("Average number of steps taken, \n averaged across all weekday days or weekend days ")
+myplot
