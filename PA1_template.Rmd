@@ -8,7 +8,7 @@ output:
 
 ## Loading and preprocessing the data
 #My Working Directory
-setwd("C:/Users/vasur/Desktop/Learning/5")
+setwd("C:/Users/vasur/Desktop/Learning/5_Reproducible")
 # load data with headers
 data_file <- read.csv("activity.csv",header=T)
 #Getting Dimensons of Data
